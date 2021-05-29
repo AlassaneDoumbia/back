@@ -45,12 +45,19 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     #'schema_graph',
-    #'djongo',
     #'modeltranslation',
     #'drf_yasg2',
     #'generic_relations',
     'corsheaders',
     #'packaging',
+
+    #own apps
+    'sai',
+    'bearer',
+    'uploadFile',
+    'globalP',
+    'pdp',
+    
 ]
 
 MIDDLEWARE = [
@@ -90,23 +97,23 @@ WSGI_APPLICATION = 'back.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'test',
-#         'USER': 'kpi_db',
-#         'PASSWORD': 'lb@P@ssWord123',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test',
+        'USER': 'kpi_db',
+        'PASSWORD': 'lb@P@ssWord123',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 
 # Password validation
