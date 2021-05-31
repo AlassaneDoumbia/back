@@ -35,11 +35,13 @@ class BearerViewSet(viewsets.ModelViewSet):
             
 
             if roaming == "out":
-                sql = "select id, Date as date, GTPv2_C_Attempts_OUT as Total_Transactions, GTPv2_C_Average_Session_Duration_msec_OUT as heure, Efficacité_OUT as EFF from bearer_bearer_out where Opérateur='"+country_operator+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30 "
+                sql = "select Date as date, GTPv2_C_Attempts_OUT as Total_Transactions, GTPv2_C_Average_Session_Duration_msec_OUT as heure, Efficacité_OUT as EFF from bearer_bearer_out where Opérateur='"+country_operator+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30 "
+                # sql = "select id, Date as date, GTPv2_C_Attempts_OUT as Total_Transactions, GTPv2_C_Average_Session_Duration_msec_OUT as heure, Efficacité_OUT as EFF from bearer_bearer_out where Opérateur='"+country_operator+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30 "
                 queryset = Params.objects.raw(sql)
                 razbi = customSerializer(queryset, many=True)
             else:
-                sql = "select id, select Date as date, GTPv2_C_Attempts_IN as Total_Transactions, GTPv2_C_Average_Session_Duration_msec_IN as heure, Efficacité_IN as EFF  from bearer_bearer_in where Opérateur='"+country_operator+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30 "
+                sql = "select Date as date, GTPv2_C_Attempts_IN as Total_Transactions, GTPv2_C_Average_Session_Duration_msec_IN as heure, Efficacité_IN as EFF  from bearer_bearer_in where Opérateur='"+country_operator+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30 "
+                # sql = "select id, Date as date, GTPv2_C_Attempts_IN as Total_Transactions, GTPv2_C_Average_Session_Duration_msec_IN as heure, Efficacité_IN as EFF  from bearer_bearer_in where Opérateur='"+country_operator+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30 "
                 queryset = Params.objects.raw(sql)
                 razbi = customSerializer(queryset, many=True)
 
@@ -97,7 +99,7 @@ def insertData(df, object, roam):
 
 def getDateToMills(date):
     # date_time_obj = datetime.strptime(date, '%b %d, %Y %H:%M')
-    date_time_obj = datetime.strptime(date, '%b %d, %Y')
+    date_time_obj = datetime.strptime(date, '%B %d, %Y')
     return int(date_time_obj.timestamp())
 
 

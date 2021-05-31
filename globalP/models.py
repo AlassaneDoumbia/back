@@ -22,6 +22,6 @@ class Params(models.Model):
     # Interval_Time = models.CharField(max_length=100)
     Total_Transactions = models.PositiveIntegerField()
     # Failed_Transactions =models.PositiveIntegerField()
-    EFF =  models.PositiveIntegerField()
+    EFF =  models.FloatField()
     # date_mns = models.BigIntegerField(default=None)
  

@@ -81,12 +81,10 @@ class SaiViewSet(viewsets.ModelViewSet):
             roaming = serializer.validated_data['roaming']
             debut_obj = getDateToMills(serializer.validated_data['dateDebut'])
             fin_obj = getDateToMills(serializer.validated_data['dateFin'])
-            sql = stringSQL("heure",debut_obj,fin_obj, country_operator)
-            print(serializer.validated_data['dateDebut'][0:12])
-            print(serializer.validated_data['dateDebut'][0:12])
-            print(country_operator)
-            print(sql)
-            if roaming == "OUT":
+
+            if roaming == "out":
+                sql = "select substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_out where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
+                # sql = "select id, substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_out where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
                 queryset = Params.objects.raw(sql)
                 # queryset = Sai_OUT.objects.raw("SELECT id, Total_Transactions, Interval_Time, EFF, date_mns FROM sai_sai_out WHERE"+
                 # " date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'")
@@ -94,6 +92,8 @@ class SaiViewSet(viewsets.ModelViewSet):
                 razbi = customSerializer(queryset, many=True)                               
 
             else:
+                sql = "select substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_in where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
+                # sql = "select id, substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_in where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
                 # queryset = Sai_OUT.objects.raw("SELECT Interval_Time, EFF, date_mns FROM sai_sai_out WHERE PLMN_Carrier="+str(country_operator)+
                 queryset = Params.objects.raw(sql)
                 # queryset = Sai_IN.objects.filter(PLMN_Carrier=country_operator).filter(Interval_Time__gte=dateDebut).filter(Interval_Time__lte=dateFin)
@@ -115,16 +115,17 @@ class SaiViewSet(viewsets.ModelViewSet):
             df = pd.read_excel(uploaded_file.read(), engine="openpyxl")
            
             print(df)
-    
-            liste = []
-            if serializer.validated_data['bound'] =="OUT":                
-                liste = insertData(df, Sai_OUT, "out")
-                # print(Sai_OUT.objects.filter(PLMN_Carrier=country_operator))
-            else:
-                liste = insertData(df, Sai_IN, "in")
+            try:
+                liste = []
+                if serializer.validated_data['bound'] =="out":                
+                    liste = insertData(df, Sai_OUT, "out")
+                    # print(Sai_OUT.objects.filter(PLMN_Carrier=country_operator))
+                else:
+                    liste = insertData(df, Sai_IN, "in")
+            except:
+                return Response("Erreur de formatage du fichier. Merci de bien effectuer une verification avant l'import",status=status.HTTP_400_BAD_REQUEST)
 
-
-            return Response({"numberofligne": len(liste), "type": df.columns}, status=status.HTTP_201_CREATED)
+            return Response({"numberofligne": len(df), "type": df.columns}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -137,19 +138,19 @@ def insertData(df, object, roam):
     while i < len(df):
         if roam == "out":
             sai: object = object(
-                Interval_Time = df["Interval Time"][i], date_mns = getDateToMills(df["Interval Time"][i]), 
+                Interval_Time = df["Date"][i], date_mns = getDateToMills(df["Date"][i]), 
+                PLMN_Carrier=df["PLMN Carrier"][i],
+                Direction=df["Direction"][i], Service=df["Service"][i],
+                Opcode=df["Opcode"][i], HVA=df["HVA"][i], Total_Transactions=df["Total Transactions"][i],
+                Failed_Transactions=df["Failed Transactions"][i], EFF=df["Eff "][i],
+            )
+        else:
+            sai: object = object(
+                Interval_Time = df["Date"][i], date_mns = getDateToMills(df["Date"][i]), 
                 PLMN_Carrier=df["PLMN Carrier"][i],
                 Direction=df["Direction"][i], Service=df["Service"][i],
                 Opcode=df["Opcode"][i], HVA=df["HVA"][i], Total_Transactions=df["Total Transactions"][i],
                 Failed_Transactions=df["Failed Transactions"][i], EFF=df["EFF"][i],
-            )
-        else:
-            sai: object = object(
-                Interval_Time = df["Unnamed: 0"][i],
-                PLMN_Carrier=df["Unnamed: 1"][i],
-                Direction=df["Unnamed: 2"][i], Service=df["Unnamed: 3"][i],
-                Opcode=df["Unnamed: 4"][i], HVA=df["Unnamed: 5"][i], Total_Transactions=df["Unnamed: 6"][i],
-                Failed_Transactions=df["Unnamed: 7"][i], EFF=df["Unnamed: 8"][i], date_mns = getDateToMills(df["Unnamed: 0"][i])
             )
         i = i + 1
         liste.append(sai)
@@ -158,7 +159,13 @@ def insertData(df, object, roam):
     data = object.objects.bulk_create(liste)
     return data
 
-
 def getDateToMills(date):
-    date_time_obj = datetime.strptime(date, '%b %d, %Y %H:%M')
+    date_time_obj = datetime.strptime(date, '%b %d, %Y')
+    # date_time_obj = datetime.strptime(date, '%b %d, %Y %H:%M')
     return int(date_time_obj.timestamp())
+
+def stringSQL(format, debut, fin, carrier ) :
+    if format == "heure":
+        return "select id, substr(Interval_Time,1,12) as date, substr(Interval_Time,14,18) as heure, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_in where PLMN_Carrier='"+str(carrier)+"' AND date_mns BETWEEN '"+str(debut)+"' AND '"+str(fin)+"' group by date, heure limit 20"
+    else:
+        return "select id, substr(Interval_Time,1,12) as date, substr(Interval_Time,14,18) as heure, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_in where PLMN_Carrier='"+str(carrier)+"' AND date_mns BETWEEN '"+str(debut)+"' AND '"+str(fin)+"' group by date limit 20"
