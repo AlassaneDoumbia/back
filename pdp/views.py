@@ -42,14 +42,14 @@ class PdpViewSet(viewsets.ModelViewSet):
             # sql = stringSQL("heure",debut_obj,fin_obj, country_operator)
             # print(sql)
             if roaming == "out":
-                sql = "select Date as date, GTP_C_Procedure_Attempts as Total_Transactions, GTP_C_Procedure_Average_Latency_msec as heure, Eff_PDP_Act as EFF from pdp_pdp_out  where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
-                # sql = "select id, Date as date, GTP_C_Procedure_Attempts as Total_Transactions, GTP_C_Procedure_Average_Latency_msec as heure, Eff_PDP_Act as EFF from pdp_pdp_out  where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
+                # sql = "select Date as date, GTP_C_Procedure_Attempts as Total_Transactions, GTP_C_Procedure_Average_Latency_msec as heure, Eff_PDP_Act as EFF from pdp_pdp_out  where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
+                sql = "select id, Date as date, GTP_C_Procedure_Attempts as Total_Transactions, GTP_C_Procedure_Average_Latency_msec as heure, Eff_PDP_Act as EFF from pdp_pdp_out  where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
                 queryset = Params.objects.raw(sql)
                 razbi = customSerializer(queryset, many=True)                               
 
             else:
-                sql = "select Date as date, GTP_C_Procedure_Attempts_IN as Total_Transactions, GTP_C_Procedure_Average_Latency_msec_IN as heure, Eff_PDP_Act_IN as EFF from pdp_pdp_in where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
-                # sql = "select id, Date as date, GTP_C_Procedure_Attempts_IN as Total_Transactions, GTP_C_Procedure_Average_Latency_msec_IN as heure, Eff_PDP_Act_IN as EFF from pdp_pdp_in where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
+                # sql = "select Date as date, GTP_C_Procedure_Attempts_IN as Total_Transactions, GTP_C_Procedure_Average_Latency_msec_IN as heure, Eff_PDP_Act_IN as EFF from pdp_pdp_in where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
+                sql = "select id, Date as date, GTP_C_Procedure_Attempts_IN as Total_Transactions, GTP_C_Procedure_Average_Latency_msec_IN as heure, Eff_PDP_Act_IN as EFF from pdp_pdp_in where date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'limit 30;"
                 queryset = Params.objects.raw(sql)
                 razbi = customSerializer(queryset, many=True)
 
