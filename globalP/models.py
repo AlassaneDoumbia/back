@@ -4,6 +4,7 @@ from django.db import models
 
 
 class Countries(models.Model):
+    id = models.BigAutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     alpha3Code = models.CharField(max_length=255)
     callingCodes = models.CharField(max_length=255)
@@ -17,6 +18,7 @@ class Countries(models.Model):
 
 
 class Params(models.Model):
+    id = models.BigAutoField(primary_key=True)
     date = models.CharField(max_length=100)
     heure = models.CharField(max_length=100)
     # Interval_Time = models.CharField(max_length=100)

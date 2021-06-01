@@ -7,6 +7,7 @@ def generate_filename(filename):
 
 
 class File(models.Model):
+  id = models.BigAutoField(primary_key=True)
   CHOICE = (("IN","IN"), ("OUT", "OUT"))
   fileName = models.CharField(max_length=100)
   Type = models.CharField(max_length=20, choices=CHOICE)

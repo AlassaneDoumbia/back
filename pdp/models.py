@@ -3,6 +3,7 @@ from django.db import models
 # '%b %d, %Y',      # 'Oct 25, 2006'
 
 class Pdp_OUT(models.Model):
+    id = models.BigAutoField(primary_key=True)
     Date = models.CharField(max_length=25)
     Operator = models.CharField(max_length=255)
     GTP_C_Procedure_Attempts = models.IntegerField()
@@ -16,6 +17,7 @@ class Pdp_OUT(models.Model):
         return "Pdp_OUT"
 
 class Pdp_IN(models.Model):
+    id = models.BigAutoField(primary_key=True)
     Date = models.CharField(max_length=25)
     Operator = models.CharField(max_length=255)
     GTP_C_Procedure_Attempts_IN = models.IntegerField()

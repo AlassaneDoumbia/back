@@ -83,8 +83,8 @@ class SaiViewSet(viewsets.ModelViewSet):
             fin_obj = getDateToMills(serializer.validated_data['dateFin'])
 
             if roaming == "out":
-                # sql = "select substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_out where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
                 sql = "select id, substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_out where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
+                #sql = "select id, substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_out where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
                 queryset = Params.objects.raw(sql)
                 # queryset = Sai_OUT.objects.raw("SELECT id, Total_Transactions, Interval_Time, EFF, date_mns FROM sai_sai_out WHERE"+
                 # " date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"'")
@@ -92,7 +92,7 @@ class SaiViewSet(viewsets.ModelViewSet):
                 razbi = customSerializer(queryset, many=True)                               
 
             else:
-                # sql = "select substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_in where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
+                #sql = "select substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_in where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
                 sql = "select id, substr(Interval_Time,1,12) as date, sum(Total_Transactions) as Total_Transactions, avg(EFF) as EFF from sai_sai_in where PLMN_Carrier='"+str(country_operator)+"' AND date_mns BETWEEN '"+str(debut_obj)+"' AND '"+str(fin_obj)+"' group by date limit 25"
                 # queryset = Sai_OUT.objects.raw("SELECT Interval_Time, EFF, date_mns FROM sai_sai_out WHERE PLMN_Carrier="+str(country_operator)+
                 queryset = Params.objects.raw(sql)

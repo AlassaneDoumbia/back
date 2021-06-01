@@ -4,6 +4,7 @@ from django.db import models
 
 
 class Sai_IN(models.Model):
+    id = models.BigAutoField(primary_key=True)
     Interval_Time = models.CharField(max_length=25)
     PLMN_Carrier = models.CharField(max_length=100)
     Direction = models.CharField(max_length=40)
@@ -20,6 +21,7 @@ class Sai_IN(models.Model):
 
 
 class Sai_OUT(models.Model):
+    id = models.BigAutoField(primary_key=True)
     Interval_Time = models.CharField(max_length=255)
     PLMN_Carrier = models.CharField(max_length=255)
     Direction = models.CharField(max_length=255)

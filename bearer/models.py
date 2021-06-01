@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Bearer_In(models.Model):
+    id = models.BigAutoField(primary_key=True)
     Date = models.CharField(max_length=255)
     Opérateur = models.CharField(max_length=255)
     GTPv2_C_Attempts_IN = models.IntegerField()
@@ -17,6 +18,7 @@ class Bearer_In(models.Model):
         return "Bearer_In"
 
 class Bearer_Out(models.Model):
+    id = models.BigAutoField(primary_key=True)
     Date = models.CharField(max_length=255)
     Opérateur = models.CharField(max_length=255)
     GTPv2_C_Attempts_OUT = models.IntegerField()
